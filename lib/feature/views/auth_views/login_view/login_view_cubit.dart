@@ -11,6 +11,14 @@ final class AuthLoginViewCubit extends Cubit<AuthLoginState> {
   final TextEditingController emailController;
   final TextEditingController passwordController;
 
+  Future<void> tryToLoginWithCachedAccount() async {
+    final list = await CacheUtil.getSavedAccount();
+    if (list == null) return;
+    emailController.text = list[0];
+    passwordController.text = list[1];
+    await loginButtonPress();
+  }
+
   Future<void> loginButtonPress() async {
     final respond = await AuthService.loginRequest(
       mail: emailController.text,
@@ -28,6 +36,12 @@ final class AuthLoginViewCubit extends Cubit<AuthLoginState> {
             ),
           ),
         );
+        unawaited(
+          CacheUtil.accountSave(
+            email: emailController.text,
+            password: passwordController.text,
+          ),
+        );
       case HttpStatus.unauthorized:
         emit(
           AuthLoginErrorState(
@@ -36,6 +50,18 @@ final class AuthLoginViewCubit extends Cubit<AuthLoginState> {
         );
       default:
     }
+  }
+
+  Future<void> registerPageNavigate(BuildContext context) async {
+    final list = await Navigator.of(context).push(
+      MaterialPageRoute<List<String>>(
+        builder: (_) => const AuthRegisterView(),
+      ),
+    );
+    if (list == null) return;
+    emailController.text = list[0];
+    passwordController.text = list[1];
+    await loginButtonPress();
   }
 }
 

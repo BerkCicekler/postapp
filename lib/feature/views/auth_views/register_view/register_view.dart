@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:postapp/feature/views/auth_views/login_view/login_view.dart';
 import 'package:postapp/feature/widgets/custom_button.dart';
 import 'package:postapp/feature/widgets/custom_text_field.dart';
 import 'package:postapp/product/constants/enums/padding_enums.dart';
@@ -12,22 +13,39 @@ import 'package:postapp/product/utils/regexp_util.dart';
 part 'register_view_cubit.dart';
 part 'register_view_mixin.dart';
 
-class AuthRegisterView extends StatefulWidget {
+final class AuthRegisterView extends StatefulWidget {
   const AuthRegisterView({super.key});
 
   @override
   State<AuthRegisterView> createState() => _AuthRegisterViewState();
 }
 
-class _AuthRegisterViewState extends State<AuthRegisterView>
+final class _AuthRegisterViewState extends State<AuthRegisterView>
     with RegisterViewOperation {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => AuthRegisterViewCubit(
-          userNameController: _userNameController,
-          emailController: emailController,
-          passwordController: passwordController),
+        userNameController: _userNameController,
+        emailController: emailController,
+        passwordController: passwordController,
+      ),
+      child: const _Scaffold(),
+    );
+  }
+}
+
+final class _Scaffold extends StatelessWidget {
+  const _Scaffold();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthRegisterViewCubit, AuthRegisterState>(
+      listener: (context, state) {
+        if (state is AuthRegisterSuccessState) {
+          Navigator.of(context).pop(<String>[state.email, state.password]);
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -35,7 +53,7 @@ class _AuthRegisterViewState extends State<AuthRegisterView>
         body: Padding(
           padding: EdgeInsets.all(PaddingConstants.high.value),
           child: const Center(
-            child: _Body(),
+            child: SingleChildScrollView(child: _Body()),
           ),
         ),
       ),

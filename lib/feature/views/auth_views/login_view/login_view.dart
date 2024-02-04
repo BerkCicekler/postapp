@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/gestures.dart';
@@ -10,6 +11,7 @@ import 'package:postapp/feature/widgets/custom_text_field.dart';
 import 'package:postapp/product/constants/enums/padding_enums.dart';
 import 'package:postapp/product/models/auth_user_model.dart';
 import 'package:postapp/product/services/auth_service.dart';
+import 'package:postapp/product/utils/cache_util.dart';
 
 part 'login_view_mixin.dart';
 part 'login_view_cubit.dart';
@@ -28,7 +30,7 @@ class _AuthLoginViewState extends State<AuthLoginView> with LoginViewOperation {
       create: (_) => AuthLoginViewCubit(
         emailController: emailController,
         passwordController: passwordController,
-      ),
+      )..tryToLoginWithCachedAccount(),
       child: const _Scaffold(),
     );
   }
@@ -40,16 +42,17 @@ final class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthLoginViewCubit, AuthLoginState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthLoginSuccessState) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
+          final list = await Navigator.of(context).pushReplacement(
+            MaterialPageRoute<List<String>>(
               builder: (_) => const PostsView(),
             ),
           );
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
         ),
@@ -76,6 +79,7 @@ final class _Body extends StatelessWidget {
         CustomTextField(
           controller: authLoginViewCubit.emailController,
           hintText: 'Email',
+          keyboardType: TextInputType.emailAddress,
         ),
         const SizedBox(
           height: 32,
@@ -99,10 +103,7 @@ final class _Body extends StatelessWidget {
           text: TextSpan(
             text: 'Register',
             recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => AuthRegisterView()));
-              },
+              ..onTap = () => authLoginViewCubit.registerPageNavigate(context),
           ),
         ),
       ],

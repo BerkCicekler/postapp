@@ -2,13 +2,13 @@
 
 part of 'register_view.dart';
 
-final class AuthRegisterViewCubit extends Cubit<RegisterState> {
+final class AuthRegisterViewCubit extends Cubit<AuthRegisterState> {
   AuthRegisterViewCubit({
     required this.userNameController,
     required this.emailController,
     required this.passwordController,
   }) : super(
-          RegisterInitialState(),
+          AuthRegisterInitialState(),
         );
 
   final TextEditingController userNameController;
@@ -24,9 +24,26 @@ final class AuthRegisterViewCubit extends Cubit<RegisterState> {
     final respond = await AuthService.registerRequest(
       name: userNameController.text,
       mail: emailController.text,
-      password: emailController.text,
+      password: passwordController.text,
       image: profilePicture,
     );
+    if (respond == null) return;
+    switch (respond.statusCode) {
+      case HttpStatus.conflict:
+        return emit(
+          AuthRegisterErrorState(
+            message: 'Email adress in on use',
+          ),
+        );
+      case HttpStatus.ok:
+        return emit(
+          AuthRegisterSuccessState(
+            email: emailController.text,
+            password: passwordController.text,
+          ),
+        );
+      default:
+    }
   }
 
   void setProfilePicture(File file) {
@@ -34,10 +51,19 @@ final class AuthRegisterViewCubit extends Cubit<RegisterState> {
   }
 }
 
-sealed class RegisterState {}
+sealed class AuthRegisterState {}
 
-final class RegisterInitialState extends RegisterState {}
+final class AuthRegisterInitialState extends AuthRegisterState {}
 
-final class RegisterSuccessState extends RegisterState {}
+final class AuthRegisterSuccessState extends AuthRegisterState {
+  AuthRegisterSuccessState({required this.email, required this.password});
 
-final class RegisterErrorState extends RegisterState {}
+  final String email;
+  final String password;
+}
+
+final class AuthRegisterErrorState extends AuthRegisterState {
+  AuthRegisterErrorState({required this.message});
+
+  final String message;
+}

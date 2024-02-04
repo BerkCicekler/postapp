@@ -81,7 +81,7 @@ class _ProfilePictureHolder extends StatelessWidget {
         backgroundColor: Colors.transparent,
         radius: 33,
         backgroundImage: NetworkImage(
-          'http://localhost:3000/uploads/2024-02-02T19-08-56.773Z.jpg',
+          'http://10.0.2.2:3000/uploads/2024-02-02T19-08-56.773Z.jpg',
         ),
       ),
     );
