@@ -8,7 +8,6 @@ part of 'post_model.dart';
 
 PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       id: json['id'] as int,
-      title: json['title'] as String,
       context: json['context'] as String,
       imagePath: json['imagePath'] as String,
       senderUser:
@@ -17,7 +16,6 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
 
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
       'context': instance.context,
       'imagePath': instance.imagePath,
       'senderUser': instance.senderUser,

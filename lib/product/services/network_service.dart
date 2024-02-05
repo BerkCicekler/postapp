@@ -4,7 +4,7 @@ final class NetworkService {
   NetworkService._init() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://10.0.2.2:3000',
+        baseUrl: 'http://localhost:3000',
         validateStatus: (status) {
           return true;
         },

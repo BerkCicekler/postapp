@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:postapp/product/constants/enums/padding_enums.dart';
+import 'package:postapp/product/models/post_model.dart';
+import 'package:postapp/product/models/user_model.dart';
 
 final class PostsView extends StatelessWidget {
   const PostsView({super.key});
@@ -12,10 +14,21 @@ final class PostsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Posts'),
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            _PostWidget(),
+            _PostWidget(
+              post: PostModel(
+                id: 5,
+                context: "gidin artık",
+                imagePath: "",
+                senderUser: UserModel(
+                    id: 5,
+                    photoPath:
+                        "http://localhost:3000/uploads/2024-02-02T19-08-56.773Z.jpg",
+                    name: "sa"),
+              ),
+            ),
           ],
         ),
       ),
@@ -24,7 +37,9 @@ final class PostsView extends StatelessWidget {
 }
 
 class _PostWidget extends StatelessWidget {
-  const _PostWidget();
+  const _PostWidget({required this.post});
+
+  final PostModel post;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +56,9 @@ class _PostWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ProfilePictureHolder(),
+          _ProfilePictureHolder(
+            imagePath: post.senderUser.photoPath,
+          ),
           SizedBox(
             width: 15,
           ),
@@ -49,7 +66,7 @@ class _PostWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Eşek yit",
+                post.senderUser.name,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 20,
@@ -58,7 +75,7 @@ class _PostWidget extends StatelessWidget {
               SizedBox(
                 width: width * .7,
                 child: Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                  post.context,
                 ),
               ),
             ],
@@ -70,19 +87,19 @@ class _PostWidget extends StatelessWidget {
 }
 
 class _ProfilePictureHolder extends StatelessWidget {
-  const _ProfilePictureHolder();
+  const _ProfilePictureHolder({required this.imagePath});
+
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
-    return const CircleAvatar(
-      radius: 35,
-      backgroundColor: Colors.grey,
-      child: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: 33,
-        backgroundImage: NetworkImage(
-          'http://10.0.2.2:3000/uploads/2024-02-02T19-08-56.773Z.jpg',
-        ),
+    return ClipOval(
+      child: Image.network(
+        imagePath,
+        width: 70,
+        errorBuilder: (context, error, stackTrace) {
+          return ColoredBox(color: Colors.orange);
+        },
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:postapp/product/theme/dark_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  await Hive.deleteBoxFromDisk('account');
+  //await Hive.deleteBoxFromDisk('account');
   runApp(const _MyApp());
 }
 

@@ -7,14 +7,12 @@ part 'post_model.g.dart';
 final class PostModel {
   PostModel({
     required this.id,
-    required this.title,
     required this.context,
     required this.imagePath,
     required this.senderUser,
   });
 
   final int id;
-  final String title;
   final String context;
   final String imagePath;
 
