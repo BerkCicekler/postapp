@@ -4,7 +4,7 @@ This application uses a restfull API that i build my self with nodejs and expres
 
 ## Features
 Auth System <br>
-Remind me <br>
+Remember me <br>
 send and read posts
 
 ## Dependencies
