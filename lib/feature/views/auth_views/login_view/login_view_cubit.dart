@@ -25,16 +25,17 @@ final class AuthLoginViewCubit extends Cubit<AuthLoginState> {
       password: passwordController.text,
     );
     if (respond == null) {
+      emit(AuthLoginErrorState(message: 'Unexpected error'));
       return;
     }
     switch (respond.statusCode) {
       case HttpStatus.ok:
+        final model = AuthUserModel.fromJson(
+          respond.data as Map<String, dynamic>,
+        );
+        NetworkService.setAuthToken(authToken: model.authToken);
         emit(
-          AuthLoginSuccessState(
-            model: AuthUserModel.fromJson(
-              respond.data as Map<String, dynamic>,
-            ),
-          ),
+          AuthLoginSuccessState(model: model),
         );
         unawaited(
           CacheUtil.accountSave(

@@ -40,11 +40,13 @@ final class _PostWidget extends StatelessWidget {
                 _ExtendableTextContext(
                   fullText: post.context,
                 ),
-                post.imagePath.isNotEmpty
-                    ? _ContextImage(
-                        imageURL: post.imagePath,
-                      )
-                    : const SizedBox(),
+                if (post.imagePath.isNotEmpty)
+                  _ContextImage(
+                    imageURL: post.imagePath,
+                    postId: post.id,
+                  )
+                else
+                  const SizedBox(),
               ],
             ),
           ),
@@ -62,14 +64,14 @@ final class _ProfilePictureHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipOval(
-      child: Image.network(
-        imagePath,
-        width: 70,
-        errorBuilder: (context, error, stackTrace) {
-          return const ColoredBox(
-            color: Colors.orange,
-          );
-        },
+      child: CachedNetworkImage(
+        width: 60,
+        height: 60,
+        imageUrl: imagePath.isEmpty
+            ? 'http://localhost:3000/uploads/defaultProfile.jpg'
+            : imagePath,
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );
   }
@@ -142,9 +144,10 @@ class _ExtendableTextContextState extends State<_ExtendableTextContext> {
 }
 
 final class _ContextImage extends StatelessWidget {
-  const _ContextImage({required this.imageURL});
+  const _ContextImage({required this.imageURL, required this.postId});
 
   final String imageURL;
+  final int postId;
 
   @override
   Widget build(BuildContext context) {
@@ -153,14 +156,17 @@ final class _ContextImage extends StatelessWidget {
       highlightColor: Colors.transparent,
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(
+          MaterialPageRoute<void>(
             builder: (_) => FocusImageView(
               imageURL: imageURL,
             ),
           ),
         );
       },
-      child: Hero(tag: 'focusedImage', child: Image.network(imageURL)),
+      child: Hero(
+        tag: 'focusedImage$postId',
+        child: Image.network(imageURL),
+      ),
     );
   }
 }

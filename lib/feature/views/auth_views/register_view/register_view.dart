@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:postapp/feature/views/auth_views/login_view/login_view.dart';
 import 'package:postapp/feature/widgets/custom_button.dart';
 import 'package:postapp/feature/widgets/custom_text_field.dart';
 import 'package:postapp/product/constants/enums/padding_enums.dart';
 import 'package:postapp/product/services/auth_service.dart';
+import 'package:postapp/product/utils/image_cropper_util.dart';
 import 'package:postapp/product/utils/image_picker_util.dart';
 import 'package:postapp/product/utils/regexp_util.dart';
 
@@ -114,7 +116,10 @@ class _ProfilePictureState extends State<_ProfilePicture> {
   Future<void> _selectImage() async {
     final image = await ImagePickerUtil.pickAnImage();
     if (image == null) return;
-    context.read<AuthRegisterViewCubit>().setProfilePicture(image);
+    final cropperImage =
+        await ImageCropperUtil().profilePictureCropper(file: image);
+    if (cropperImage == null) return;
+    context.read<AuthRegisterViewCubit>().setProfilePicture(cropperImage);
     setState(() {});
   }
 

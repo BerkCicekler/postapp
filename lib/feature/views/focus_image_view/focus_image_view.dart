@@ -19,7 +19,11 @@ class FocusImageView extends StatelessWidget {
           Navigator.of(context).pop();
         },
         child: Center(
-            child: Hero(tag: 'focusedImage', child: Image.network(imageURL))),
+          child: Hero(
+            tag: 'focusedImage',
+            child: Image.network(imageURL),
+          ),
+        ),
       ),
     );
   }

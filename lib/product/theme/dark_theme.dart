@@ -15,7 +15,9 @@ final class CustomDarkTheme {
       primary: ColorConstants.defaultBlue,
       background: Color(0xFF1c2125),
       surface: Color(0xFF272c30),
+      outline: Color(0XFF9F9F9E),
     ),
+    canvasColor: Colors.transparent,
     fontFamily: FontConstants.inter,
   );
 }

@@ -19,6 +19,15 @@ final class NetworkService {
     return _instance!;
   }
 
+  /// This method will add the given [authToken] to dio's request method's header
+  static void setAuthToken({required String authToken}) {
+    _instance!.dio.options = _instance!.dio.options.copyWith(
+      headers: {
+        'token': authToken,
+      },
+    );
+  }
+
   static NetworkService? _instance;
 
   late final Dio dio;

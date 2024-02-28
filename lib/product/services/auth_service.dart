@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart' show MediaType;
 import 'package:postapp/product/constants/enums/endpoint_enums.dart';
 import 'package:postapp/product/services/network_service.dart';
-import 'package:http_parser/http_parser.dart';
 
 /// Auth Service class for sending request to the api
 final class AuthService {
@@ -14,7 +14,7 @@ final class AuthService {
     required String password,
   }) async {
     try {
-      final x = await NetworkService.instance.dio.get(
+      final x = await NetworkService.instance.dio.get<Map<String, dynamic>>(
         NetworkEndPoints.user.value,
         data: {
           'mail': mail,

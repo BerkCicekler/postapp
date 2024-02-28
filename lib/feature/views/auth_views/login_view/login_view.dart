@@ -10,7 +10,9 @@ import 'package:postapp/feature/widgets/custom_button.dart';
 import 'package:postapp/feature/widgets/custom_text_field.dart';
 import 'package:postapp/product/constants/enums/padding_enums.dart';
 import 'package:postapp/product/models/auth_user_model.dart';
+import 'package:postapp/product/models/providers/auth_user_provider.dart';
 import 'package:postapp/product/services/auth_service.dart';
+import 'package:postapp/product/services/network_service.dart';
 import 'package:postapp/product/utils/cache_util.dart';
 
 part 'login_view_mixin.dart';
@@ -42,10 +44,11 @@ final class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthLoginViewCubit, AuthLoginState>(
-      listener: (context, state) async {
+      listener: (context, state) {
         if (state is AuthLoginSuccessState) {
-          final list = await Navigator.of(context).pushReplacement(
-            MaterialPageRoute<List<String>>(
+          context.read<AuthUserProvider>().changeUser(state.model);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute<void>(
               builder: (_) => const PostsView(),
             ),
           );
@@ -112,7 +115,7 @@ final class _Body extends StatelessWidget {
 }
 
 class _LoginErrorTextBuilder extends StatelessWidget {
-  const _LoginErrorTextBuilder({super.key});
+  const _LoginErrorTextBuilder();
 
   @override
   Widget build(BuildContext context) {
