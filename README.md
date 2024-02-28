@@ -1,4 +1,4 @@
-# postapp (development on going)
+# postapp
 Post app is a basic social media app for sending posts. This application is coded with Flutter.
 This application uses a restfull API that i build my self with nodejs and express module [Post-App-API](https://github.com/BerkCicekler/Post-App-API)
 
